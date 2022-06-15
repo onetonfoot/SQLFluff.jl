@@ -1,0 +1,14 @@
+name = "SQLFluff"
+uuid = "11e08050-5ec4-4c5b-9d13-2b4885894485"
+authors = ["dom <onetonfoot@gmail.com>"]
+version = "0.1.0"
+
+[deps]
+CondaPkg = "992eb4ea-22a4-4c89-a5bb-47a3300528ab"
+PythonCall = "6099a3de-0909-46bc-b1f4-468b9a2dfc0d"
+SQLStrings = "af517c2e-c243-48fa-aab8-efac3db270f5"
+
+[compat]
+CondaPkg = "0.2"
+PythonCall = "0.9"
+SQLStrings = "0.1"
