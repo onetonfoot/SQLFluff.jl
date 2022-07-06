@@ -37,7 +37,6 @@ function dialect!(s)
 	sql_dialect[] = s
 end
 
-
 struct SQLParseError <: Exception
     line_no::String
     line_pos::String
@@ -46,26 +45,37 @@ end
 
 Base.showerror(io::IO, e::SQLParseError) = print(io, "SQLParseError($(e.description))")
 
-macro sql_str(str)
+function lint_sql(str)
     lint_result = sqlfluff.lint(str, dialect=sql_dialect[])
     bools = map(x -> string(x["code"]) == "PRS", lint_result)
+	errs = []
     for (i, b) in enumerate(bools)
         if b
             err = lint_result[i-1]
-			@info err
             e = SQLParseError(
                 string(err["line_no"]),
                 string(err["line_pos"]),
                 string(err["description"]),
             )
 
-            return quote
-                throw($(e))
-            end
+			push!(errs, e)
         end
     end
 
+	return errs
+end
+
+macro sql_str(str)
+	errs = lint_sql(str)
+
+	if !isempty(errs)
+		return quote
+			throw($(errs[1]))
+		end
+	end
+
     args = parse_interpolations(str, allow_dollars_in_strings[])
+
     quote
         Sql(process_args!([], $(args...)))
     end
