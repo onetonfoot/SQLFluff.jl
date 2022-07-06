@@ -40,3 +40,5 @@ Where the supported dialects are
     "tsql",
 ]
 ```
+
+TODO: Support interpolations, otherwise what's the point lol
